@@ -1,0 +1,16 @@
+import "TestCaseTT.m2t"
+
+/**
+ *
+ * Template Transformation TestSuiteTT
+ *
+ */
+texttransformation TestSuiteTT (in uc:"UseCommands") {
+ 
+ 	 uc.TestSuite::getTestSuite() : String {
+        result += "--Test Suite: " + self.name + "\n"        
+		self.testCase->forEach(tc : uc.TestCase){		  			
+      		   	result += tc.getTestCases() + "\n" 
+      		  }	
+	}
+}

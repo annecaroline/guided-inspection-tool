@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ActionSemantics:TestSuiteAction xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ActionSemantics="ActionSemantics"
+  xmlns:BasicActions="BasicActions" xmlns:Kernel="Kernel" xmlns:StructuredActivies="StructuredActivies" 
+  name="Chess_TC_01">
+  <testCase number="01">
+    <commands>
+      <action xsi:type="BasicActions:CreateObjectAction" name="CreateObjectAction" qualifiedName="CreateObjectAction">
+        <owner xsi:type="Kernel:Classifier" name="JogoXadrez" qualifiedName="JogoXadrez"/>
+        <input name="jogo" qualifiedName="jogo"/>
+        <result name="jogo" qualifiedName="jogo"/>
+      </action>
+       <action xsi:type="BasicActions:CallOperationAction" name="CallOperationAction" >
+          <owner xsi:type="Kernel:Operation" name="iniciarNovoJogoXadrez" qualifiedName="iniciarNovoJogoXadrez" lower="0" upper="10">
+          <owner xsi:type="Kernel:Parameter" name="()" qualifiedName="()" default="()"/>
+          </owner>
+          <target name="jogo" qualifiedName="jogo"/>
+        </action>
+       <action xsi:type="BasicActions:CallOperationAction" name="CallOperationAction" >
+          <owner xsi:type="Kernel:Operation" name="solicitaNomeJogadores" qualifiedName="solicitaNomeJogadores" lower="0" upper="10">
+          <owner xsi:type="Kernel:Parameter" name="('Jonas','Maria')" qualifiedName="('Jonas','Maria')" />
+          </owner>
+          <target name="jogo" qualifiedName="jogo"/>
+        </action>
+        <action xsi:type="BasicActions:CallOperationAction" name="CallOperationAction" >
+          <owner xsi:type="Kernel:Operation" name="adicionaJogador" lower="0" upper="10">
+          <owner xsi:type="Kernel:Parameter" name="('Jonas',0)" qualifiedName="('Jonas',0)" />
+          </owner>
+          <target name="jogo" qualifiedName="jogo"/>
+        </action>
+      </commands>
+  </testCase>
+</ActionSemantics:TestSuiteAction>

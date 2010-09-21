@@ -1,0 +1,504 @@
+module GuidedInspection; -- Module Template
+create OUT : DefectsReport from TC : uml2, SD : uml2;
+
+-------------------- Helper para o Diagrama de Sequencia ------
+helper def : model(model : uml2!Model) :
+    Sequence(uml2!Model) = model->asSequence();
+
+helper def : package(model : uml2!Model) :
+	Sequence(uml2!Package) = 
+		thisModule.model(model)->collect(m | m.packagedElement)->first();
+	
+helper def : collaboration(model : uml2!Model) : 
+	uml2!Collaboration = 
+		thisModule.package(model)->select(p|p.oclIsTypeOf(uml2!Collaboration)
+			= true)->last();
+
+helper def : stereotypeTC(model : uml2!Model) :
+	uml2!Stereotype = 
+		thisModule.package(model)->select(p|p.oclIsTypeOf(uml2!Stereotype) = true)->
+		collect(s | s.name)->select(n | n = 'TestCase')->first();
+
+helper def : stereotypeSD(model : uml2!Model) :
+	uml2!Stereotype = 
+		thisModule.package(model)->select(p|p.oclIsTypeOf(uml2!Stereotype) = true)->
+		collect(s | s.name)->select(n | n = 'Design')->first();
+
+helper def : interaction(model : uml2!Model) :
+	Sequence(uml2!Interaction) = thisModule.collaboration(model).ownedBehavior;
+
+helper def : classes(model : uml2!Model) :
+	Sequence(uml2!Class) = 
+		thisModule.interaction(model)->collect(c | c.nestedClassifier)->first();
+
+helper def : lifeline(model : uml2!Model) : 
+	Sequence(uml2!Lifeline) = 
+		thisModule.interaction(model)->collect(l | l.lifeline)->first();
+
+helper def : fragment(model : uml2!Model) : 
+	Sequence(uml2!OccurrenceSpecification) = 
+		thisModule.interaction(model)->collect(f | f.fragment)->first();
+
+helper def : fragmentMessage(model : uml2!Model) : 
+	Sequence(uml2!MessageOccurrenceSpecification) =
+		thisModule.fragment(model)->
+			select(f | f.oclIsTypeOf(uml2!MessageOccurrenceSpecification));
+
+helper def : fragmentExecution(model : uml2!Model) : 
+	Sequence(uml2!BehaviorExecutionSpecification) = 
+		thisModule.fragment(model)->
+			select(f | f.oclIsTypeOf(uml2!BehaviorExecutionSpecification));
+
+helper def : combinedFragment(model : uml2!Model) :
+    Sequence(uml2!CombinedFragment) = 
+    	thisModule.fragment(model)->
+			select(f | f.oclIsTypeOf(uml2!CombinedFragment));
+
+helper def : message(model : uml2!Model) :
+    Sequence(uml2!Message) = 
+    	thisModule.interaction(model)->collect(m | m.message)->first();
+
+helper def : event(msg : uml2!Message) :
+	uml2!MessageEvent = msg.receiveEvent.event;
+
+helper def : classTypeSender(msg : uml2!Message) :
+	uml2!Class = msg.sendEvent.covered->first().represents.type;
+
+helper def : classTypeReceiver(msg : uml2!Message) :
+	uml2!Class = msg.receiveEvent.covered->first().represents.type;
+
+helper def : description : 
+	String = '';
+
+
+------------------------------ Regras para Inspeção Guiada ---------------------
+rule testCaseInspection {
+	from
+	  	tc : uml2!Model
+		
+	do {		
+		if(thisModule.stereotypeTC(tc) <> OclUndefined){
+			self.reportDescription(tc);	
+		}
+	}
+}
+-- Descrição do relatório de defeitos com os respectivos defeitos.
+rule reportDescription(tc : uml2!Model){
+	using {
+		sd : Sequence(uml2!Model) = uml2!Model->allInstances()->asSequence()->first();
+	    sd2 : Sequence(uml2!Model) = uml2!Model->allInstances()->asSequence()->last();
+	}	
+	to
+		rep: DefectsReport!Report(testCase <- 
+			                      thisModule.interaction(tc)->first().name)
+	do {			
+		if(thisModule.stereotypeSD(sd) = OclUndefined){
+			sd <- sd2;
+		} 
+		
+		if(tc <> sd) {					
+			self.guidedInspection(tc, sd, rep);
+		} else { 
+			'Não foi possível realizar a Inspeção Guiada, pois os modelos são idênticos. Execute novamente!'.println();
+		}
+	}
+}
+
+-- Realiza todas as regras para a Inspeção Guiada.
+rule guidedInspection(tc : uml2!Model, sd : uml2!Model, 
+					  rep : DefectsReport!Report) {	
+	
+    using { 
+		--Variáveis para o Diagrama de sequencia de caso de teste
+		--base para a inspeção
+		clsNameSenderTc : String = '';
+		clsNameReceiverTc : String = '';
+		i : Integer = 0;
+		operationTc : uml2!Operation = '';
+		eventTc : uml2!MessageEvent = '';
+		parameterTc : uml2!Parameter = '';
+		numberOfMessagesTc : Integer = thisModule.message(tc)->asSequence()->size(); 
+		
+	    ---Variáveis para o Diagrama de sequencia a ser inspecionado		
+        messageSD : uml2!Message = thisModule.message(sd);
+		clsNameSenderSd : String = '';
+        clsNameReceiverSd : String = '';
+        j : Integer = 0;
+		operationSd : uml2!Operation = '';
+	    eventSd : uml2!MessageEvent = '';
+	    parameterSd : uml2!Parameter = '';
+	    k : Integer = 1000;
+	    unFound : Boolean = false;
+	    found : Boolean = false;	
+	    diff : Boolean = false;	    
+	    numberOfMessagesSd : Integer = thisModule.message(sd)->asSequence()->size(); 
+	    
+	    fragmentOperatorSD : String = thisModule.combinedFragment(sd)->asSequence()->first();
+	    fragmentTC : uml2!MessageOccurrenceSpecification = thisModule.fragmentMessage(tc)->asSequence(); 
+	}
+	
+	do {		
+		for(msgTc in thisModule.message(tc)) {
+			for(msgSd in thisModule.message(sd)) {
+								
+				-- Nome dos eventos
+				eventTc <- thisModule.event(msgTc);
+				eventSd <- thisModule.event(msgSd);
+				
+				-- Nome das classes que enviam as mensagens
+				clsNameSenderTc <- thisModule.classTypeSender(msgTc).name;	
+				clsNameSenderSd <- thisModule.classTypeSender(msgSd).name;	
+				
+				if(msgTc.receiveEvent.covered->first().represents <> OclUndefined){
+					clsNameReceiverTc <- thisModule.classTypeReceiver(msgTc).name;
+				} else {
+					unFound = true;
+					'UNFOUND-CLASSNAME_TC-----'.println();
+				--	self.reportMsgUnFoundError(thisModule.description, '',
+				--    					'', 'clsNameReceiverTc undefined', rep);
+				}
+				
+				--clsNameReceiverSd <- thisModule.classTypeReceiver(msgSd).name;
+				if(msgSd.receiveEvent.covered->first().represents <> OclUndefined){
+					clsNameReceiverSd <- thisModule.classTypeReceiver(msgSd).name;
+				} else {
+					unFound = true;
+					'UNFOUND-CLASSNAME_SD-----'.println();
+				--	self.reportMsgUnFoundError(thisModule.description, '',
+				--    					'', 'clsNameReceiverSd undefined', rep);
+				}
+					
+				if(diff = true  or (unFound = false and found = false and ((k = 1000 and j<k) or (k <> 1000 and j > k)))){
+				  diff <- false;
+				  if(msgTc <> OclUndefined and msgSd <> OclUndefined) {
+					if(eventTc <> OclUndefined and eventSd <> OclUndefined){						
+														
+						-- Se eventTc for sinal						
+						if(eventTc.oclIsTypeOf(uml2!ReceiveSignalEvent) = true){
+							-- Se eventSd também for sinal					
+							if(eventSd.oclIsTypeOf(uml2!ReceiveSignalEvent) = true){
+								-- se os nomes dos eventos forem diferentes.								
+							  if(clsNameReceiverTc <> clsNameReceiverSd){
+							  		--o eventTc não foi encontrado em eventSd
+									'# UNFOUND 01---------'.println();
+							  		clsNameReceiverTc.println();
+							       unFound <- true;
+								   self.reportMsgUnFoundError(thisModule.description, clsNameSenderTc,
+				    					clsNameReceiverTc, msgTc.name, rep);
+							  } else if(clsNameSenderTc = clsNameSenderSd and clsNameReceiverTc = clsNameReceiverSd){ --verifica a posição igual
+								if(msgTc.name <> msgSd.name){ -- se as mensagens forem diferentes
+									'# SYNTAX 01---------'.println();
+									found <- true;
+									k <- j;
+									self.reportMsgSyntaxError(thisModule.description, clsNameSenderTc, 
+				    					clsNameReceiverTc, msgTc.name, msgSd.name, rep);
+								} else { -- se os nomes forem iguais
+									found <- true;
+									k <- j;
+								}
+							  } else { -- se a posição for diferente
+							  	if(msgTc.name = msgSd.name){ --se as mensagens forem iguais
+									found <- true;
+									k <- j;
+							  		-- Verificar o Sender e o Receiver de uma mensagem
+				    				if(clsNameSenderTc <> clsNameSenderSd or clsNameReceiverTc <> clsNameReceiverSd){
+				    					'# POSITION 01---------'.println();
+				    					self.reportMsgPositionError(thisModule.description, clsNameSenderSd, clsNameSenderTc, 
+											clsNameReceiverSd, clsNameReceiverTc, msgTc.name, msgSd.name, rep);
+				    				}
+								}
+							  }
+							} else {
+								if(unFound = false){ --se o eventSd não for do mesmo tipo do eventTc ####DIFF = FALSE
+								   --o eventTc não foi encontrado em eventSd								
+							       unFound <- true;
+								   '# UNFOUND 02---------'.println();
+								   self.reportMsgUnFoundError(thisModule.description, clsNameSenderTc,
+				    					clsNameReceiverTc, msgTc.name, rep);
+								} 
+								
+								if(diff = false) { 
+								  
+								  if(found = true and clsNameReceiverSd <> clsNameSenderTc and clsNameSenderTc <> clsNameSenderSd) {
+									diff <- true;
+									k <- j;
+									--Sender and Receiver Differents
+									operationSd <- eventSd.operation;
+									if(operationSd <> OclUndefined){										
+										'# MSG_DIFF 01---------'.println();
+										self.reportMsgDiffAlert(thisModule.description, clsNameSenderSd, clsNameReceiverSd, 
+											operationSd.name, rep);	
+									} else {
+										'# MSG_DIFF 02---------'.println();
+										self.reportMsgDiffAlert(thisModule.description, clsNameSenderSd, clsNameReceiverSd, 
+											msgSd.name, rep);
+									}
+								  }
+								}
+							}
+							-- se o eventoSd for uma operação
+							if(eventSd.oclIsTypeOf(uml2!ReceiveOperationEvent)=true and unFound = false and found = false){			--AQUI					
+								operationSd <- eventSd.operation;							   							    
+								if(operationSd <> OclUndefined and diff = false){--se SD for um método
+									'# MSG_DIFF 03---------'.println();
+									self.reportMsgDiffAlert(thisModule.description, clsNameSenderSd, clsNameReceiverSd, 
+										operationSd.name, rep);
+								} 
+					    	}
+						}					
+						
+						if(diff = true or (unFound = false and found = false)){
+						  -- Se eventTc e eventSd forem métodos de classe		
+						  
+						  if(eventTc.oclIsTypeOf(uml2!ReceiveOperationEvent)=true){
+                            --Operation 2 							  
+				   			if(eventSd.oclIsTypeOf(uml2!ReceiveOperationEvent)=true){
+				   				-- Recupera método
+				   				operationTc <- eventTc.operation;
+			       				operationSd <- eventSd.operation;
+				       
+			    				-- Se o método de TC estiver definido
+								if(operationTc <> OclUndefined and unFound = false and found = false){ 
+									
+									-- Se o método de SD estiver definido	
+									if(operationSd <> OclUndefined){			 		
+	                                  if(clsNameSenderTc = clsNameSenderSd and clsNameReceiverTc = clsNameReceiverSd){ --verifica a posição igual
+										-- Se os nomes dos métodos forem diferentes
+										if(operationTc.name <> operationSd.name) {				
+											'# SYNTAX 02---------'.println();	
+											found <- true;
+											k <- j;
+											self.reportMsgSyntaxError(thisModule.description, clsNameSenderTc,
+				    							clsNameReceiverTc, operationTc.name, operationSd.name, rep);
+				    					} else { -- Se os nomes dos métodos forem iguais
+											found <- true;
+				    						k <- j;				    						
+				    						-- Nome dos tipos dos parâmetros dos métodos					    		
+				   							parameterTc <- operationTc.ownedParameter->select(t | t.type <> OclUndefined)->
+												collect(o | o.type.name);
+				    						-- Nome dos tipos dos parâmetros dos métodos
+					   						parameterSd <- operationSd.ownedParameter->select(t | t.type <> OclUndefined)->
+												collect(o | o.type.name);
+				    						
+											-- Se houver diferença nos parâmetros dos métodos.
+											if(parameterTc.notEmpty() and parameterSd.notEmpty() and
+												parameterTc <> parameterSd){
+													'# SYNTAX 03---------'.println();	
+													found <- true;
+													k <- j;
+													self.reportParameterSyntaxError(thisModule.description,
+														clsNameSenderTc, clsNameReceiverTc,operationTc.name, 
+														parameterTc.toString(), parameterSd.toString(), rep);							
+											}
+										}	                                  	
+	                                  } else {-- posições diferentes
+	                                 	if(operationTc.name = operationSd.name){ --mensagens iguais
+	                                 		found <- true;
+				    						k <- j;
+				    						'# POSITION 02---------'.println();	
+				    						self.reportMsgPositionError(thisModule.description, clsNameSenderSd, clsNameSenderTc, 
+												clsNameReceiverSd, clsNameReceiverTc, operationTc.name, operationSd.name, rep);
+	                                  	}
+	                                  }
+									-- caso não encontrar o método no Diagrama de Sequencia
+									} else if(operationSd = OclUndefined and unFound = false and found = false){					
+										if(clsNameSenderTc = clsNameSenderSd and clsNameReceiverTc = clsNameReceiverSd){
+										   unFound <- true;
+										   '# UNFOUND 03---------'.println();	
+									      	self.reportMsgUnFoundError(thisModule.description, clsNameSenderTc,
+				    					        clsNameReceiverTc, operationTc.name, rep);
+										}
+										if(clsNameSenderTc <> clsNameSenderSd) {
+											diff <- true;
+											k <- j;
+											operationSd <- eventSd.operation;
+											if(operationSd <> OclUndefined){												
+												'# MSG_DIFF 04---------'.println();	
+												self.reportMsgDiffAlert(thisModule.description, clsNameSenderSd, clsNameReceiverSd, 
+													operationSd.name, rep);
+											} else if(msgSd.name <> OclUndefined) {
+												'# MSG_DIFF 05---------'.println();	
+												self.reportMsgDiffAlert(thisModule.description, clsNameSenderSd, clsNameReceiverSd, 
+													msgSd.name, rep);
+											}
+										}
+									}
+								} else if (operationTc = OclUndefined and unFound = false and found = false) { 
+									if(operationSd = OclUndefined){
+									  if(clsNameSenderTc = clsNameSenderSd and clsNameReceiverTc = clsNameReceiverSd){ --verifica a posição igual
+											found <- true;
+				    						k <- j;	
+									  } else if(msgTc.name <> OclUndefined and msgSd.name <> OclUndefined){
+									  	if(msgTc.name = msgSd.name){
+									  		found <- true;
+				    						k <- j;
+				    						'# POSITION 03---------'.println();	
+				    						self.reportMsgPositionError(thisModule.description, clsNameSenderSd, clsNameSenderTc, 
+												clsNameReceiverSd, clsNameReceiverTc, msgTc.name, msgSd.name, rep);
+									  	} else { -- encontrou a mensagem que não tem método mas tem descrição diferente
+									  		found <- true;
+				    						k <- j;
+				    						'# POSITION 04---------'.println();
+				    						self.reportMsgPositionError(thisModule.description, clsNameSenderSd, clsNameSenderTc, 
+												clsNameReceiverSd, clsNameReceiverTc, msgTc.name, msgSd.name, rep);
+									  	}
+									  }
+									} else if(unFound = false and msgTc.name <> OclUndefined){
+										unFound <- true;
+										'# UNFOUND 04---------'.println();
+										self.reportMsgUnFoundError(thisModule.description, clsNameSenderTc,
+				    						clsNameReceiverTc, msgTc.name, rep);
+										if(clsNameSenderTc <> clsNameSenderSd and unFound = false and found = true) {
+											diff <- true;
+											k <- j;
+											operationSd <- eventSd.operation;
+											if(operationSd <> OclUndefined){												
+												'# MSG_DIFF 06---------'.println();
+												self.reportMsgDiffAlert(thisModule.description, clsNameSenderSd, clsNameReceiverSd, 
+													operationSd.name, rep);
+											} else if(msgSd.name <> OclUndefined) {
+												'# MSG_DIFF 07---------'.println();
+												self.reportMsgDiffAlert(thisModule.description, clsNameSenderSd, clsNameReceiverSd, 
+													msgSd.name, rep);
+											}
+										}
+									}
+								}
+							} else if(diff = false and unFound = false and found = false and msgSd.name <> OclUndefined){ -- se o eventSd nao for do mesmo tipo do eventTc
+							   diff <- true;
+							    '# MSG_DIFF 08---------'.println();
+								self.reportMsgDiffAlert(thisModule.description, clsNameSenderSd, 
+				    				clsNameReceiverSd, msgSd.name, rep);									
+							}
+						  } --if: método
+						 
+						  -- Verifica create em classe abstrata
+						  if(eventSd.oclIsTypeOf(uml2!ReceiveSignalEvent)=true){
+							 '# ABSTRACT CLASS ----------'.println();	
+						  	if(msgSd.receiveEvent.covered->first().represents <> OclUndefined and msgSd.name = 'create' 
+						  	 	   and thisModule.classTypeReceiver(msgSd).isAbstract = true){
+						  	   self.reportAbstractMsgError(thisModule.description, clsNameSenderSd, clsNameReceiverSd, rep);
+						  	}
+						  }
+						}  -- if: pular se não encontrou ou encontrou
+						
+					} -- if: evento
+					
+				  } --if: eventos não nulos	
+				}
+				if(j = k+1 and i = numberOfMessagesTc-1){ -- recuperar mensagens restantes no SD após a última mensagem do TC
+					if(eventSd.oclIsTypeOf(uml2!ReceiveSignalEvent) = true and msgSd.name <> OclUndefined){
+						'# MSG_DIFF 09---------'.println();
+						self.reportMsgDiffAlert(thisModule.description, clsNameSenderSd, clsNameReceiverSd, 
+								msgSd.name, rep);
+					} else if(eventSd.oclIsTypeOf(uml2!ReceiveOperationEvent) = true){
+						operationSd <- eventSd.operation;
+						if(operationSd <> OclUndefined){												
+					    	'# MSG_DIFF 10---------'.println();
+							self.reportMsgDiffAlert(thisModule.description, clsNameSenderSd, clsNameReceiverSd, 
+								operationSd.name, rep);
+						} else if(msgSd.name <> OclUndefined){
+							'# MSG_DIFF 11---------'.println();
+							self.reportMsgDiffAlert(thisModule.description, clsNameSenderSd, clsNameReceiverSd, 
+								msgSd.name, rep);
+						}		
+					}			
+				}
+				j <- j+1;
+			}--for: SD
+			j <- 0;
+			i <- i+1;
+			unFound <- false;
+			found <- false;
+			diff <- false;
+		}--for: TC
+	}
+}
+
+
+--------------------------------Rules for Guided Inspection ---------------------------------- 
+-- Regra para identificar erros de sintaxe nas mensagens.
+rule reportMsgSyntaxError(description : String, clsNameSenderTc : String, 
+						  clsNameReceiverTc : String, 
+						  msgTc : String, msgSd : String, 
+						  rep : DefectsReport!Report) {	
+	
+	to 
+ 		msgSyntaxError: DefectsReport!MsgSyntaxError(
+ 			description <- 'The message\'s syntax <b>'+ msgSd + '</b> is not in conformity with the message in the class diagram.', actualSender <- clsNameSenderTc, 
+			actualReceiver <- clsNameReceiverTc, actualMessage <- msgSd, 
+			expectedMessage <- msgTc)
+    do {
+		rep.defect <- rep.defect->including(msgSyntaxError);
+	}
+}
+
+-- Regra para identificar erros de sintaxe nos parametros das mensagens.
+rule reportParameterSyntaxError(description : String, clsNameSenderTc : String,
+								clsNameReceiverTc : String, message : String, 
+								parameterTc : String, parameterSd : String,
+								rep : DefectsReport!Report){
+	to 
+ 		parameterSyntaxError: DefectsReport!MsgSyntaxError(
+ 			description <- 'The message parameter types <b>' + parameterSd + '</b> are not in conformity with the class diagram.',
+			actualSender <- clsNameSenderTc, actualReceiver <- clsNameReceiverTc,
+			actualMessage <- message, actualParameter <- parameterSd, 
+			expectedParameter <- parameterTc)
+    do {
+		rep.defect <- rep.defect->including(parameterSyntaxError);
+	}
+}
+
+-- Regra para identificar que o sender ou o receiver de uma mensagem está errado. 
+rule reportMsgPositionError(description : String, classSenderSd : String, 
+							classSenderTc : String, classReceiverSd : String, 
+							classReceiverTc : String, messageTc: String, messageSd: String,
+							rep : DefectsReport!Report){
+		
+	to
+ 		msgPositionError: DefectsReport!MsgPositionError(
+ 			description <- 'Verify the sender <b>' + classSenderSd + '</b> and the receiver <b>' + classReceiverSd + '</b> of this message.', actualMessage <- messageTc, 
+			actualSender <- classSenderSd, actualReceiver <- classReceiverSd,
+			expectedSender <- classSenderTc, expectedReceiver <- classReceiverTc)
+	do {
+		rep.defect <- rep.defect->including(msgPositionError);
+	}
+}
+
+-- Regra para informar que uma mensagem não foi encontrada no diag. inspecionado
+-- no mesmo ponto em que foi definido no caso de teste
+rule reportMsgUnFoundError(description : String, classSenderTc : String, 
+						   classReceiverTc: String,
+						   messageTc : String, rep : DefectsReport!Report){	
+	to
+		msgUnFoundError: DefectsReport!MsgUnFoundError(
+ 			description <- 'The expected message <b>' + messageTc + '</b> should be in the sequence diagram, but it was not found.', expectedMessage <- messageTc,			
+			actualSender <- classSenderTc, actualReceiver <- classReceiverTc)
+	do {
+		rep.defect <- rep.defect->including(msgUnFoundError);
+	}
+}
+--Se no TC houver um sinal e no SD houver um método e virce-versa
+rule reportMsgDiffAlert(description : String, classSenderSd : String, 
+						classReceiverSd : String,
+						operationSd : String, rep : DefectsReport!Report) {
+	to 
+ 		msgDiffAlert: DefectsReport!MsgDiffAlert(
+ 			description <- 'The message <b>' + operationSd + '</b> was not found in the test case sequence diagram.', actualSender <- classSenderSd, 
+			actualReceiver <- classReceiverSd, actualMessage <- operationSd)
+	do {
+		rep.alert <- rep.alert->including(msgDiffAlert);
+	}
+}
+
+--Se no TC houver um sinal e no SD houver um método e virce-versa
+rule reportAbstractMsgError(description : String, classSenderSd : String, 
+						classReceiverSd : String, rep : DefectsReport!Report) {
+	to 
+ 		abstractMsgError: DefectsReport!AbstractMsgError(
+ 			description <- 'Abstract classes cannot be created from received life line.', actualSender <- classSenderSd, 
+			actualReceiver <- classReceiverSd)
+	do {
+		rep.defect <- rep.defect->including(abstractMsgError);
+	}
+}

@@ -1,0 +1,92 @@
+texttransformation CommandTemplate (in uc:"UseCommands") {
+      
+  /*
+	* This rule defines a template for a Command.
+	*/
+	module::commandTemplate(name: String){
+
+		// TODO code this template rule.
+		result += "// TODO define a template for: Command"
+
+	} 
+	
+   /*
+	* This rule defines a template for a CreateObjectCmd.
+	*/
+	module::createObjectCmdTemplate(obj: String, type: String){
+
+		// TODO code this template rule.
+		result += "// TODO define a template for: CreateObjectCmd"
+
+	} 
+  
+     /*
+	* This rule defines a template for a DestroyObjectCmd.
+	*/
+	module::destroyObjectCmdTemplate(obj: String){
+
+		// TODO code this template rule.
+		result += "// TODO define a template for: DestroyObjectCmd"
+
+	} 
+
+    /*
+	* This rule defines a template for a SetAttributeCmd.
+	*/
+	module::setAttributeCmdTemplate(obj: String, attributeName: String, value: String){
+
+		// TODO code this template rule.
+		result += "// TODO define a template for: SetAttributeCmd"
+
+	} 
+	
+    /*
+	* This rule defines a template for a GetAttributeCmd.
+	*/
+	module::getAttributeCmdTemplate(obj: String, attributeName: String){
+
+		// TODO code this template rule.
+		result += "// TODO define a template for: GetAttributeCmd"
+
+	}
+	
+   /*
+	* This rule defines a template for a InsertAssociationCmd.
+	*/
+	module::insertAssociationCmdTemplate(obj1: String, obj2: String, association: String){
+
+		// TODO code this template rule.
+		result += "// TODO define a template for: InsertAssociationCmd"
+
+	}
+	
+  /*
+	* This rule defines a template for a DeleteAssociationCmd.
+	*/
+	module::deleteAssociationCmdTemplate(obj1: String, obj2: String, association: String){
+
+		// TODO code this template rule.
+		result += "// TODO define a template for: DeleteAssociationCmd"
+
+	}
+	
+   /*
+	* This rule defines a template for a OpenterCmd.
+	*/
+	module::openterCmdTemplate(obj: String, methodName: String, parameter: String){
+
+		// TODO code this template rule.
+		result += "// TODO define a template for: OpenterCmd"
+
+	}
+	
+   /*
+	* This rule defines a template for a OpexitCmd.
+	*/
+	module::opexitCmdTemplate(value: String){
+
+		// TODO code this template rule.
+		result += "// TODO define a template for: OpexitCmd"
+
+	}
+}

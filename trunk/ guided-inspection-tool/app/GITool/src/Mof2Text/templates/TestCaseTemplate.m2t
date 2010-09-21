@@ -1,0 +1,13 @@
+texttransformation TestCaseTemplate (in uc:"UseCommands") {
+      
+  /*
+	* This rule defines a template for a TestCase.
+	*/
+	module::testCaseTemplate(number:String, commands: String){
+
+		// TODO code this template rule.
+		result += "// TODO define a template for: TestCase"
+
+	} 
+  
+}

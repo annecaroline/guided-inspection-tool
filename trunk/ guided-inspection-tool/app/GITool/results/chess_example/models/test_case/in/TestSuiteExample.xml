@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ActionSemantics:TestSuiteAction xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ActionSemantics="ActionSemantics" xmlns:BasicActions="BasicActions" xmlns:Kernel="Kernel" xmlns:StructuredActivies="StructuredActivies" name="Chess Game">
+  <testCase number="1">
+    <commands>
+      <action xsi:type="BasicActions:CreateObjectAction" name="CreateObjectAction" qualifiedName="CreateObjectAction">
+        <owner xsi:type="Kernel:Classifier" name="ChessGame" qualifiedName="ChessGame"/>
+        <input name="chess1" qualifiedName="chess1"/>
+        <result name="chess1" qualifiedName="chess1"/>
+      </action>
+      <action xsi:type="BasicActions:DestroyObjectAction" name="DestroyObjectAction" qualifiedName="DestroyObjectAction">
+        <target name="chess1" qualifiedName="chess1"/>
+      </action>
+      <action xsi:type="BasicActions:WriteVariableAction" name="WriteVariableAction" qualifiedName="WriteVariableAction">
+        <owner xsi:type="StructuredActivies:Variable" name="chess1" qualifiedName="chess1" action="//@testCase.0/@commands.0/@action.2">
+          <owner xsi:type="Kernel:Property" name="rules" qualifiedName="rules" default="rules"/>
+        </owner>
+        <value name="'2 players'" qualifiedName="2 players"/>
+      </action>
+      <action xsi:type="BasicActions:ReadVariableAction" name="ReadVariableAction" qualifiedName="ReadVariableAction">
+        <owner xsi:type="StructuredActivies:Variable" name="chess1" qualifiedName="chess1" action="//@testCase.0/@commands.0/@action.3">
+          <owner xsi:type="Kernel:Property" name="rules" qualifiedName="rules" default="rules"/>
+        </owner>
+        <result name="chess1" qualifiedName="chess1"/>
+      </action>
+      <action xsi:type="BasicActions:CreateObjectAction" name="CreateObjectAction" qualifiedName="CreateObjectAction">
+        <owner xsi:type="Kernel:Classifier" name="Match" qualifiedName="Match"/>
+        <input name="mtc1" qualifiedName="mtc1"/>
+        <result name="mtc1" qualifiedName="mtc1"/>
+      </action>
+      <action xsi:type="BasicActions:CreateLinkObjectAction" name="CreateLinkObjectAction" qualifiedName="CreateLinkObjectAction">
+        <inputValue name="chess1" qualifiedName="chess1"/>
+        <inputValue name="mtc1" qualifiedName="mtc1"/>
+        <endData xsi:type="BasicActions:LinkEndCreationData">
+          <owner xsi:type="Kernel:Property" name="Executes" qualifiedName="Executes" default="Executes" linkEndData="//@testCase.0/@commands.0/@action.5/@endData.0 //@testCase.0/@commands.0/@action.6/@endData.0"/>
+        </endData>
+        <result name="Executes" qualifiedName="Executes"/>
+      </action>
+      <action xsi:type="BasicActions:DestroyLinkAction" name="DestroyLinkAction" qualifiedName="DestroyLinkAction">
+        <inputValue name="chess1" qualifiedName="chess1"/>
+        <inputValue name="mtc1" qualifiedName="mtc1"/>
+        <endData xsi:type="BasicActions:LinkEndDestructionData">
+          <owner xsi:type="Kernel:Property" name="Executes" qualifiedName="Executes" default="Executes"/>
+        </endData>
+      </action>
+      <action xsi:type="BasicActions:CallOperationAction" name="CallOperationAction" qualifiedName="CallOperationAction">
+        <owner xsi:type="Kernel:Operation" name="startNewMatch" qualifiedName="startNewMatch" lower="0" upper="10" callOper="//@testCase.0/@commands.0/@action.7">
+          <owner xsi:type="Kernel:Parameter" name="()" qualifiedName="()" default="()"/>
+        </owner>
+        <target name="chess1" qualifiedName="chess1"/>
+      </action>
+      <action xsi:type="BasicActions:CallOperationAction" name="CallOperationAction" qualifiedName="CallOperationAction">
+        <owner xsi:type="Kernel:Operation" name="requestsPlayersName" qualifiedName="requestsPlayersName" lower="0" upper="10" callOper="//@testCase.0/@commands.0/@action.8">
+          <owner xsi:type="Kernel:Parameter" name="('Jonas','Paula')" qualifiedName="('Jonas','Paula')" default="('Jonas','Paula')"/>
+        </owner>
+        <target name="chess1" qualifiedName="chess1"/>
+      </action>
+      <action xsi:type="BasicActions:ReplyAction" name="ReplyAction" qualifiedName="ReplayAction">
+        <returnInformation name=""/>
+      </action>
+      <action xsi:type="BasicActions:ReplyAction" name="ReplyAction" qualifiedName="ReplyAction">
+        <returnInformation name="2" qualifiedName="2"/>
+      </action>
+      <action xsi:type="BasicActions:OpaqueAction"/>
+    </commands>
+  </testCase>
+</ActionSemantics:TestSuiteAction>

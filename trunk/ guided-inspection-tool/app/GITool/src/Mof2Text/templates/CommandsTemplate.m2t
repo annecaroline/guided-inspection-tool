@@ -1,0 +1,13 @@
+texttransformation CommandsTemplate (in uc:"UseCommands") {
+      
+  /*
+	* This rule defines a template for a Commands.
+	*/
+	module::commandsTemplate(command: String){
+
+		// TODO code this template rule.
+		result += "// TODO define a template for: Commands"
+
+	} 
+  
+}

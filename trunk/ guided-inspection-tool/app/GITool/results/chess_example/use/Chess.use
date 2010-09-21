@@ -1,0 +1,215 @@
+-- $ProjectHeader: use 0.393 Wed, 02 Apr 2009 14:10:28 +0200 opti $
+
+model JogoXadrez
+
+-- classes
+
+enum PecaCor {Branca, Preta}
+
+class JogoXadrez
+
+operations
+  iniciarNovoJogoXadrez()
+  solicitaNomeJogadores(nomeJogBr: String, nomeJogPt: String)
+  verificaNomeValido(nomeJogador: String): Boolean
+  adicionaJogador(nomeJogador: String, pontos: Integer)
+  adicionaPartida(codigo: String)
+  adicionaJogadorPartida(jogadorBr: Jogador, jogadorPt: Jogador, codigo: String)
+  exibeTabuleiro()
+  salvaPartida(partida: Partida)
+  carregaPartida(codigo: String) : Partida
+  finalizaPartida()
+  exibeRanking()
+  adicionaPontosParaVencedor(jogador:Jogador, pontos: Integer)
+  exibePontosJogador(nomeJogador: String): Integer
+end
+
+class Jogador
+attributes
+  nome : String
+  pontos : Integer  
+
+operations
+  getJogador(): Jogador
+  setJogador(jogador: Jogador)
+  getNome(): String
+  setNome(nome: String)
+  getPontos(): Integer
+  setPontos(pontos: Integer)
+end
+
+class Partida 
+attributes
+  codigo : String
+  tabuleiro : Tabuleiro
+
+operations
+  getPartida(codigo: String): Partida  
+  executaLance(peca: Peca): Lance
+  verificaLanceValido(lance: Lance) : Boolean
+  adicionaLance(lance: Lance) :  Set(Sequence(Lance))
+  alertaXeque()
+  alertaXequeMate()
+  alertaRoque(lance: Lance)
+  alertaPromocaoPeao(lance: Lance)
+  escolhaPeca(novaPeca: Peca)
+end
+
+class Lance
+attributes
+  inicialPos : String
+  finalPos : String  
+
+operations
+  toNotationMove() : String
+  verificaLnace(): Boolean
+  verificaRoque(): Boolean
+  verificaPromocaoPeao(): Boolean
+
+end
+
+class Tabuleiro
+attributes
+  tamanho : Integer
+
+operations
+  exibePecasIniciais()
+  exibePecasPartida(partida: Partida)
+end
+
+abstract class Peca
+attributes
+  cor : PecaCor
+  valor : Integer
+
+operations
+  verificaLance(iniPos: String, finalPos: String): Boolean
+end
+
+class Torre < Peca
+operations
+  verificaLance(iniPos: String, finalPos: String): Boolean
+end
+
+class Peao < Peca
+operations
+  verificaLance(iniPos: String, finalPos: String): Boolean
+end
+
+class Rei < Peca
+operations
+  verificaLance(iniPos: String, finalPos: String): Boolean
+end
+
+class Rainha < Peca
+operations
+  verificaLance(iniPos: String, finalPos: String): Boolean
+end
+
+class Bispo < Peca
+operations
+  verificaLance(iniPos: String, finalPos: String): Boolean
+end
+
+class Cavalo < Peca
+operations
+  verificaLance(iniPos: String, finalPos: String): Boolean
+end
+
+-- associations
+
+composition TemJogadores between
+  Partida[0..*] role partida
+  Jogador[2] role jogador
+end
+
+association Registra between
+  JogoXadrez[1] role jogo
+  Jogador[0..*] role jogador
+end
+
+association Contem between
+  JogoXadrez[1] role jogo
+  Partida[0..*] role partida
+end
+
+association Inicializa between
+  JogoXadrez[1] role jogo
+  Tabuleiro[0..1] role tabuleiro
+end
+
+association RegistraLance between
+  Partida[1] role partida
+  Lance[0..*] role lance
+end
+
+composition ContemPeca between
+  Tabuleiro[1] role tabuleiro
+  Peca[0..32] role peca
+end
+
+composition UsaPeca between
+  Lance[0..*] role lance
+  Peca[1..2] role peca
+end
+
+-- constraints
+constraints
+
+
+context Partida
+  -- Garantir que a partida será criada com 2 jogadores.
+inv MatchHasNoMoreThan2Players:
+   self.jogador->size() = 0 or self.jogador->size() = 2
+
+constraints
+
+context JogoXadrez::iniciarNovoJogoXadrez()
+  pre matchIsNotDefined: self.partida->isEmpty()
+  post playersRecordsOn: self.jogador->notEmpty()
+  post matchStarted: self.partida->notEmpty()
+  post boardInitialized: self.tabuleiro.isDefined()
+  post piecesInitialized: self.tabuleiro.peca->size() = 32
+
+context JogoXadrez::solicitaNomeJogadores(nomeJogBr: String, nomeJogPt: String)
+   pre playersIsNotDefined: self.jogador->isEmpty()
+   post verifyPlayersNamesWereInputed: if self.jogador->notEmpty() then 
+                           self.jogador->select(nome = nomeJogBr)->notEmpty() and
+                           self.jogador->select(nome = nomeJogPt)->notEmpty() 
+                        else
+                           self.jogador->notEmpty()
+                        endif
+
+context JogoXadrez::verificaNomeValido(nomeJogador: String) : Boolean
+   pre playersWithThisNameIsNotDefined: self.jogador->select(nome = nomeJogador)->isEmpty()
+   post isValidPlayersName: result = nomeJogador.oclIsTypeOf(String)
+
+context JogoXadrez::adicionaJogador(nomeJogador: String, pontos: Integer)
+	pre playerIsNotAdd: self.jogador->select(nome = nomeJogador)->isEmpty()
+   post playerWasCreated: self.jogador->select(nome = nomeJogador)->notEmpty                          
+
+context JogoXadrez::adicionaPartida(codigo: String)
+	pre matchIsNotAdd: self.partida->select(codigo = codigo)->isEmpty()
+   post matchWasCreated: self.partida->select(codigo = codigo)->notEmpty
+
+context JogoXadrez::adicionaJogadorPartida(jogadorBr: Jogador, jogadorPt: Jogador, codigo: String)
+   pre matchWithoutPlayers: self.partida->isEmpty()
+   post matchWith2Players: self.partida.jogador->size() = 2     
+
+context JogoXadrez::exibeTabuleiro() 
+  pre boardIsNotDefined: not self.tabuleiro.isDefined()  
+  post boardIsDefined: self.tabuleiro.isDefined()
+
+context Tabuleiro::exibePecasIniciais()
+  pre boardIsDefined: self.isDefined()
+  pre boardHasNotPieces: self.peca->size() = 0
+  post boardHas32Pieces: self.peca->size() = 32
+
+
+--context  cadastrarECriarCliente(n: String, d: Data):Cliente
+--  post: result.oclIsNew() and 
+--        result.nome = n and 
+--        result.dataAniversario = d and
+--        cliente->includes(result)
+
+
