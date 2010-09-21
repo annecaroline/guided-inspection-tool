@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary How to download the USE Tool.
 
 = Important =
 
@@ -6,5 +6,3 @@
 
 You can download the USE Tool on:
 http://www.db.informatik.uni-bremen.de/projects/use-2.4.0.zip
-
-
