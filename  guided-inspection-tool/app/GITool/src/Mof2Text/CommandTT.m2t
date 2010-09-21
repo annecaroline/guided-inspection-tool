@@ -1,0 +1,151 @@
+/**
+ *
+ * Template Transformation CommandTT 
+ *
+ */
+texttransformation CommandTT (in uc:"UseCommands") {
+ 
+    uc.Command::getCommandStructure() : String {
+    		if(self.oclIsTypeOf(uc.CreateObjectCmd)) result = self.getCreateObjCmd()
+			else if(self.oclIsTypeOf(uc.DestroyObjectCmd)) result = self.getDetroyObjCmd()
+			else if(self.oclIsTypeOf(uc.SetAttributeCmd)) result = self.getSetAttributeCmd()
+			else if(self.oclIsTypeOf(uc.GetAttributeCmd)) result = self.getGetAttributeCmd()
+			else if(self.oclIsTypeOf(uc.InsertAssociationCmd)) result = self.getInsertAssociationCmd()
+			else if(self.oclIsTypeOf(uc.DeleteAssociationCmd)) result = self.getDeleteAssociationCmd()
+			else if(self.oclIsTypeOf(uc.OpenterCmd)) result = self.getOpenterCmd()
+			else if(self.oclIsTypeOf(uc.OpexitCmd)) result = self.getOpexitCmd()		
+    }
+    
+    /**
+ 	 * This rule returns the code of a CreateObjectCmd.
+ 	 */
+      uc.CreateObjectCmd::getCreateObjCmd() : String {
+      	  
+        	result += self.name + " " + self.obj + " : " + self.type
+      }
+    
+    /**
+ 	 * This rule returns the code of a DestroyObjectCmd.
+ 	 */
+      uc.DestroyObjectCmd::getDestroyObjCmd() : String {
+      	  
+        	result += self.name + " " + self.obj      		  	
+      }
+      
+     /**
+ 	 * This rule returns the code of a SetAttributeCmd.
+ 	 */
+      uc.SetAttributeCmd::getSetAttributeCmd() : String {
+      	  
+        	result += self.name + " " + self.obj + "." + self.attributeName + " :="  + self.value 
+      }
+      
+    /**
+ 	 * This rule returns the code of a GetAttributeCmd.
+ 	 */
+      uc.GetAttributeCmd::getGetAttributeCmd() : String {
+      	  
+        	result += self.name + " " + self.obj + "." + self.attributeName
+      }
+      
+    /**
+ 	 * This rule returns the code of a InsertAssociationCmd.
+ 	 */
+      uc.InsertAssociationCmd::getInsertAssociationCmd() : String {
+      	  
+        	result += self.name + " (" + self.obj1 + ", " + self.obj2 + ") into " +  
+        	                  self.association
+      }
+      
+    /**
+ 	 * This rule returns the code of a DeleteAssociationCmd.
+ 	 */
+      uc.DeleteAssociationCmd::getDeleteAssociationCmd() : String {
+      	  
+        	result += self.name + " (" + self.obj1 + ", " + self.obj2 + ") into " +  
+        	                  self.association
+      }
+      
+    /**
+ 	 * This rule returns the code of a OpenterCmd.
+ 	 */
+      uc.OpenterCmd::getOpenterCmd() : String {
+      	  
+        	result += self.name + " " + self.obj + " " + self.methodName +   
+        	                  self.parameter
+      }
+      
+    /**
+ 	 * This rule returns the code of a OpexitCmd.
+ 	 */
+      uc.OpexitCmd::getOpexitCmd() : String {
+      	  
+        	result += self.name + " " + self.value        	                  
+      }
+      
+       // ********************* DELEGATION ********************
+
+     /**
+	  * This rule delegates the role of returning the cmd of a CreateObjectCmd to another rule 
+      * called getCreateObjCmd():String 
+      */
+      uc.CreateObjectCmd::getCommandStructure() : String {
+		   result = self.getCreateObjCmd()
+      }
+
+     /**
+	  * This rule delegates the role of returning the cmd of a DestroyObjectCmd to another rule 
+      * called getDestroyObjCmd():String 
+      */
+      uc.DestroyObjectCmd::getCommandStructure() : String {
+		   result = self.getDestroyObjCmd()
+      }
+      
+     /**
+	  * This rule delegates the role of returning the cmd of a SetAttributeCmd to another rule 
+      * called getSetAttributeCmd():String 
+      */
+      uc.SetAttributeCmd::getCommandStructure() : String {
+		   result = self.getSetAttributeCmd()
+      }
+ 
+     /**
+	  * This rule delegates the role of returning the cmd of a GetAttributeCmd to another rule 
+      * called getGetAttributeCmd():String 
+      */
+      uc.GetAttributeCmd::getCommandStructure() : String {
+		   result = self.getGetAttributeCmd()
+      }
+      
+      /**
+	  * This rule delegates the role of returning the cmd of a InsertAssociationCmd to another rule 
+      * called getInsertAssociationCmd():String 
+      */
+      uc.InsertAssociationCmd::getCommandStructure() : String {
+		   result = self.getInsertAssociationCmd()
+      }
+      
+      /**
+	  * This rule delegates the role of returning the cmd of a DeleteAssociationCmd to another rule 
+      * called getDeleteAssociationCmd():String 
+      */
+      uc.DeleteAssociationCmd::getCommandStructure() : String {
+		   result = self.getDeleteAssociationCmd()
+      }
+      
+      /**
+	  * This rule delegates the role of returning the cmd of a OpenterCmd to another rule 
+      * called getOpenterCmd():String 
+      */
+      uc.OpenterCmd::getCommandStructure() : String {
+		   result = self.getOpenterCmd()
+      }
+      
+     /**
+	  * This rule delegates the role of returning the cmd of a OpexitCmd to another rule 
+      * called getOpexitCmd():String 
+      */
+      uc.OpexitCmd::getCommandStructure() : String {
+		   result = self.getOpexitCmd()
+      }
+}

@@ -1,0 +1,16 @@
+import "CommandsTT.m2t"
+
+/**
+ *
+ * Template Transformation TestCaseTT
+ *
+ */
+texttransformation TestCaseTT (in uc:"UseCommands") {
+
+	uc.TestCase::getTestCases() : String {
+        result += "--Test Case #"+ self.number + "\n"
+		self.commands ->forEach(c : uc.Commands){
+      		   	result += c.getCommands() 
+      		  }	
+	}
+}

@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<diagram_Layout> 
+
+<diagramOptions>
+   <autolayout>false</autolayout>
+   <antialiasing>true</antialiasing>
+   <showassocnames>true</showassocnames>
+   <showattributes>true</showattributes>
+   <showmultiplicities>true</showmultiplicities>
+   <showoperations>true</showoperations>
+   <showrolenames>false</showrolenames>
+</diagramOptions>
+
+<node type="Class">
+   <name>Peca</name>
+   <x_coord>601.2223802756695</x_coord>
+   <y_coord>393.07373444259736</y_coord>
+   <hidden>false</hidden>
+</node>
+
+<node type="Class">
+   <name>Rainha</name>
+   <x_coord>773.6270359406947</x_coord>
+   <y_coord>512.7580377033894</y_coord>
+   <hidden>false</hidden>
+</node>
+
+<node type="Class">
+   <name>Tabuleiro</name>
+   <x_coord>589.8020704495681</x_coord>
+   <y_coord>263.39167342269894</y_coord>
+   <hidden>false</hidden>
+</node>
+
+<node type="Class">
+   <name>Bispo</name>
+   <x_coord>198.1201794749661</x_coord>
+   <y_coord>514.1735988127032</y_coord>
+   <hidden>false</hidden>
+</node>
+
+<node type="Class">
+   <name>Rei</name>
+   <x_coord>485.0775720923027</x_coord>
+   <y_coord>514.8343124361863</y_coord>
+   <hidden>false</hidden>
+</node>
+
+<node type="Class">
+   <name>Cavalo</name>
+   <x_coord>924.2514160643382</x_coord>
+   <y_coord>568.0590111325218</y_coord>
+   <hidden>false</hidden>
+</node>
+
+<node type="Class">
+   <name>Partida</name>
+   <x_coord>607.2314166354688</x_coord>
+   <y_coord>101.56092366142047</y_coord>
+   <hidden>false</hidden>
+</node>
+
+<node type="Class">
+   <name>Torre</name>
+   <x_coord>630.5989299218265</x_coord>
+   <y_coord>569.9559606245605</y_coord>
+   <hidden>false</hidden>
+</node>
+
+<node type="Class">
+   <name>Lance</name>
+   <x_coord>931.8829278052044</x_coord>
+   <y_coord>224.73224114777008</y_coord>
+   <hidden>false</hidden>
+</node>
+
+<node type="Class">
+   <name>Peao</name>
+   <x_coord>319.5855637851495</x_coord>
+   <y_coord>567.4604683577247</y_coord>
+   <hidden>false</hidden>
+</node>
+
+<node type="Class">
+   <name>Jogador</name>
+   <x_coord>209.55638416959982</x_coord>
+   <y_coord>101.92403766420938</y_coord>
+   <hidden>false</hidden>
+</node>
+
+<node type="Enumeration">
+   <name>PecaCor</name>
+   <x_coord>828.8360298298724</x_coord>
+   <y_coord>354.82506632218315</y_coord>
+   <hidden>false</hidden>
+</node>
+
+<node type="Class">
+   <name>JogoXadrez</name>
+   <x_coord>210.49630632283436</x_coord>
+   <y_coord>322.75093427203467</y_coord>
+   <hidden>false</hidden>
+</node>
+
+<edge type="Inheritance">
+   <source>Torre</source>
+   <target>Peca</target>
+   <name>Inheritance</name>
+   <edgeproperty type="NodeOnEdge">
+      <id>0</id>
+      <specialid>1</specialid>
+      <x_coord>626.5957446808511</x_coord>
+      <y_coord>549.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>1</id>
+      <specialid>2</specialid>
+      <x_coord>606.6089743589744</x_coord>
+      <y_coord>428.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <hidden>false</hidden>
+</edge>
+
+<edge type="Inheritance">
+   <source>Peao</source>
+   <target>Peca</target>
+   <name>Inheritance</name>
+   <edgeproperty type="NodeOnEdge">
+      <id>0</id>
+      <specialid>1</specialid>
+      <x_coord>351.37410071942446</x_coord>
+      <y_coord>547.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>1</id>
+      <specialid>2</specialid>
+      <x_coord>544.1818181818182</x_coord>
+      <y_coord>428.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <hidden>false</hidden>
+</edge>
+
+<edge type="Inheritance">
+   <source>Rei</source>
+   <target>Peca</target>
+   <name>Inheritance</name>
+   <edgeproperty type="NodeOnEdge">
+      <id>0</id>
+      <specialid>1</specialid>
+      <x_coord>504.06976744186045</x_coord>
+      <y_coord>494.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>1</id>
+      <specialid>2</specialid>
+      <x_coord>567.3861386138614</x_coord>
+      <y_coord>428.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <hidden>false</hidden>
+</edge>
+
+<edge type="Inheritance">
+   <source>Rainha</source>
+   <target>Peca</target>
+   <name>Inheritance</name>
+   <edgeproperty type="NodeOnEdge">
+      <id>0</id>
+      <specialid>1</specialid>
+      <x_coord>743.952380952381</x_coord>
+      <y_coord>492.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>1</id>
+      <specialid>2</specialid>
+      <x_coord>651.2020202020202</x_coord>
+      <y_coord>428.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <hidden>false</hidden>
+</edge>
+
+<edge type="Inheritance">
+   <source>Bispo</source>
+   <target>Peca</target>
+   <name>Inheritance</name>
+   <edgeproperty type="NodeOnEdge">
+      <id>0</id>
+      <specialid>1</specialid>
+      <x_coord>264.51162790697674</x_coord>
+      <y_coord>494.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>1</id>
+      <specialid>2</specialid>
+      <x_coord>484.21782178217825</x_coord>
+      <y_coord>428.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <hidden>false</hidden>
+</edge>
+
+<edge type="Inheritance">
+   <source>Cavalo</source>
+   <target>Peca</target>
+   <name>Inheritance</name>
+   <edgeproperty type="NodeOnEdge">
+      <id>0</id>
+      <specialid>1</specialid>
+      <x_coord>887.0</x_coord>
+      <y_coord>548.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>1</id>
+      <specialid>2</specialid>
+      <x_coord>665.5806451612904</x_coord>
+      <y_coord>428.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <hidden>false</hidden>
+</edge>
+
+<edge type="BinaryEdge" kind="association">
+   <source>JogoXadrez</source>
+   <target>Partida</target>
+   <name>Contem</name>
+   <edgeproperty type="rolename" kind="source">
+      <name>jogo</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="rolename" kind="target">
+      <name>partida</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="multiplicity" kind="source">
+      <name>1</name>
+      <x_coord>418.49630632283436</x_coord>
+      <y_coord>258.75093427203467</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="multiplicity" kind="target">
+      <name>*</name>
+      <x_coord>468.2314166354688</x_coord>
+      <y_coord>207.56092366142047</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="associationName">
+      <name>Contem</name>
+      <x_coord>415.8638614791516</x_coord>
+      <y_coord>192.15592896672757</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>0</id>
+      <specialid>1</specialid>
+      <x_coord>406.64383561643837</x_coord>
+      <y_coord>212.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>1</id>
+      <specialid>2</specialid>
+      <x_coord>471.0</x_coord>
+      <y_coord>176.1044776119403</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <hidden>false</hidden>
+</edge>
+
+<edge type="BinaryEdge" kind="association">
+   <source>Tabuleiro</source>
+   <target>Peca</target>
+   <name>ContemPeca</name>
+   <edgeproperty type="rolename" kind="source">
+      <name>tabuleiro</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="rolename" kind="target">
+      <name>peca</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="multiplicity" kind="source">
+      <name>1</name>
+      <x_coord>471.8020704495681</x_coord>
+      <y_coord>297.39167342269894</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="multiplicity" kind="target">
+      <name>0..32</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="associationName">
+      <name>ContemPeca</name>
+      <x_coord>528.5122253626188</x_coord>
+      <y_coord>338.2327039326482</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>0</id>
+      <specialid>1</specialid>
+      <x_coord>591.9473684210526</x_coord>
+      <y_coord>298.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>1</id>
+      <specialid>2</specialid>
+      <x_coord>597.3157894736842</x_coord>
+      <y_coord>358.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <hidden>false</hidden>
+</edge>
+
+<edge type="BinaryEdge" kind="association">
+   <source>JogoXadrez</source>
+   <target>Tabuleiro</target>
+   <name>Inicializa</name>
+   <edgeproperty type="rolename" kind="source">
+      <name>jogo</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="rolename" kind="target">
+      <name>tabuleiro</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="multiplicity" kind="source">
+      <name>1</name>
+      <x_coord>376.49630632283436</x_coord>
+      <y_coord>202.75093427203467</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="multiplicity" kind="target">
+      <name>0..1</name>
+      <x_coord>617.8020704495681</x_coord>
+      <y_coord>311.39167342269894</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="associationName">
+      <name>Inicializa</name>
+      <x_coord>427.1491883862012</x_coord>
+      <y_coord>277.07130384736683</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>0</id>
+      <specialid>1</specialid>
+      <x_coord>409.0</x_coord>
+      <y_coord>290.90625</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>1</id>
+      <specialid>2</specialid>
+      <x_coord>498.0</x_coord>
+      <y_coord>276.65</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <hidden>false</hidden>
+</edge>
+
+<edge type="BinaryEdge" kind="association">
+   <source>JogoXadrez</source>
+   <target>Jogador</target>
+   <name>Registra</name>
+   <edgeproperty type="rolename" kind="source">
+      <name>jogo</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="rolename" kind="target">
+      <name>jogador</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="multiplicity" kind="source">
+      <name>1</name>
+      <x_coord>231.49630632283436</x_coord>
+      <y_coord>196.75093427203467</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="multiplicity" kind="target">
+      <name>*</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="associationName">
+      <name>Registra</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>0</id>
+      <specialid>1</specialid>
+      <x_coord>209.26174496644296</x_coord>
+      <y_coord>212.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>1</id>
+      <specialid>2</specialid>
+      <x_coord>209.0</x_coord>
+      <y_coord>173.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <hidden>false</hidden>
+</edge>
+
+<edge type="BinaryEdge" kind="association">
+   <source>Partida</source>
+   <target>Lance</target>
+   <name>RegistraLance</name>
+   <edgeproperty type="rolename" kind="source">
+      <name>partida</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="rolename" kind="target">
+      <name>lance</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="multiplicity" kind="source">
+      <name>1</name>
+      <x_coord>755.2314166354688</x_coord>
+      <y_coord>89.56092366142047</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="multiplicity" kind="target">
+      <name>*</name>
+      <x_coord>812.8829278052044</x_coord>
+      <y_coord>213.73224114777008</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="associationName">
+      <name>RegistraLance</name>
+      <x_coord>757.5571722203366</x_coord>
+      <y_coord>184.14658240459528</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>0</id>
+      <specialid>1</specialid>
+      <x_coord>743.0</x_coord>
+      <y_coord>152.0717299578059</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>1</id>
+      <specialid>2</specialid>
+      <x_coord>844.0</x_coord>
+      <y_coord>190.68085106382978</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <hidden>false</hidden>
+</edge>
+
+<edge type="BinaryEdge" kind="association">
+   <source>Partida</source>
+   <target>Jogador</target>
+   <name>TemJogadores</name>
+   <edgeproperty type="rolename" kind="source">
+      <name>partida</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="rolename" kind="target">
+      <name>jogador</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="multiplicity" kind="source">
+      <name>*</name>
+      <x_coord>441.2314166354688</x_coord>
+      <y_coord>87.56092366142047</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="multiplicity" kind="target">
+      <name>2</name>
+      <x_coord>297.5563841695998</x_coord>
+      <y_coord>87.92403766420938</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="associationName">
+      <name>TemJogadores</name>
+      <x_coord>337.3939004025343</x_coord>
+      <y_coord>98.74248066281493</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>0</id>
+      <specialid>1</specialid>
+      <x_coord>471.0</x_coord>
+      <y_coord>101.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>1</id>
+      <specialid>2</specialid>
+      <x_coord>287.0</x_coord>
+      <y_coord>101.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <hidden>false</hidden>
+</edge>
+
+<edge type="BinaryEdge" kind="association">
+   <source>Lance</source>
+   <target>Peca</target>
+   <name>UsaPeca</name>
+   <edgeproperty type="rolename" kind="source">
+      <name>lance</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="rolename" kind="target">
+      <name>peca</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="multiplicity" kind="source">
+      <name>*</name>
+      <x_coord>843.8829278052044</x_coord>
+      <y_coord>316.7322411477701</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="multiplicity" kind="target">
+      <name>1..2</name>
+      <x_coord>674.2223802756695</x_coord>
+      <y_coord>347.07373444259736</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="associationName">
+      <name>UsaPeca</name>
+      <x_coord>-1</x_coord>
+      <y_coord>-1</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>0</id>
+      <specialid>1</specialid>
+      <x_coord>844.0</x_coord>
+      <y_coord>268.4961832061069</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <edgeproperty type="NodeOnEdge">
+      <id>1</id>
+      <specialid>2</specialid>
+      <x_coord>669.04</x_coord>
+      <y_coord>358.0</y_coord>
+      <hidden>false</hidden>
+   </edgeproperty>
+   <hidden>false</hidden>
+</edge>
+
+
+</diagram_Layout>

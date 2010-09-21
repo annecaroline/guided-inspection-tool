@@ -1,0 +1,19 @@
+import "../TestSuiteTT.m2t"
+
+/**
+ *
+ * Main Text Transformation
+ *
+ */
+texttransformation MainTransformation (in uc:"UseCommands") {
+    property extension : String = ".cmd"
+	
+  /** 
+   * This rule returns the concrete code of a model rooted at a TestSuite...
+   */
+	uc.TestSuite::main(){
+	  	file(self.name + extension)
+	  	println(self.getTestSuite())	
+	}
+		
+}

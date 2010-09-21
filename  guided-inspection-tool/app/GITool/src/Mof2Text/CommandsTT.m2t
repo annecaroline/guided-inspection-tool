@@ -1,0 +1,16 @@
+import "CommandTT.m2t"
+
+/**
+ *
+ * Template Transformation CommandsTT
+ *
+ */
+texttransformation CommandsTT (in uc:"UseCommands") {
+  
+   uc.Commands::getCommands() : String {
+		self.command ->forEach(c : uc.Command){
+      		   	result += c.getCommandStructure() + "\n" 
+      		  }	
+	}
+
+}

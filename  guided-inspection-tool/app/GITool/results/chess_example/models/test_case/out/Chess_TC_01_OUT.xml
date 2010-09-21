@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<UseCommands:TestSuite xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:UseCommands="UseCommands" name="Chess_TC_01">
+  <testCase number="1">
+    <commands>
+      <command xsi:type="UseCommands:CreateObjectCmd" name="!create" obj="jogo" type="JogoXadrez"/>
+      <command xsi:type="UseCommands:OpenterCmd" name="!openter" obj="jogo" methodName="iniciarNovoJogoXadrez" parameter="()"/>
+      <command xsi:type="UseCommands:OpenterCmd" name="!openter" obj="jogo" methodName="solicitaNomeJogadores" parameter="('Jonas','Maria')"/>
+      <command xsi:type="UseCommands:OpenterCmd" name="!openter" obj="jogo" methodName="adicionaJogador" parameter="('Jonas',0)"/>
+    </commands>
+  </testCase>
+</UseCommands:TestSuite>

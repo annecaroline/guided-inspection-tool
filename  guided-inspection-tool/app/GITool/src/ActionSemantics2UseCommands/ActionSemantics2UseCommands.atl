@@ -1,0 +1,155 @@
+module ActionSemantics2UseCommands; -- Module Template
+create OUT : UseCommands from IN : ActionSemantics;
+
+	-- Creating a Test Suite, that is composed of Test Cases.
+	-- These Test Cases are composed of Commands
+	-- These Commands are composed of Action Semantics
+		
+	rule createTestSuite {
+
+		from 
+			tsAs: ActionSemantics!TestSuiteAction
+			
+    	using {
+			testCasesAc : ActionSemantics!TestCaseAction = tsAs.testCase;
+    	}
+	
+		to
+			tsUse : UseCommands!TestSuite(name <- tsAs.name,
+			    testCase <- tcUse),
+			tcUse : UseCommands!TestCase(),
+			cmdsUse : UseCommands!Commands()
+		do {
+			for (tcAc in testCasesAc) {				
+				if (tcAc.oclIsTypeOf(ActionSemantics!TestCaseAction)) 
+					self.testCaseUse(tcAc, tcUse);
+				for (cmdsAc in tcAc.commands) {
+					tcUse.commands <- tcUse.commands->including(cmdsUse);
+				    for (action in cmdsAc.action){		
+						if (action.oclIsTypeOf(ActionSemantics!CreateObjectAction)) {
+						 	self.createObjectUseCommand(action, cmdsUse);
+						 	
+						} else if (action.oclIsTypeOf(ActionSemantics!DestroyObjectAction)) {
+							self.destroyObjectUseCommand(action, cmdsUse);
+							
+						} else if (action.oclIsTypeOf(ActionSemantics!WriteVariableAction)) {
+							self.setAttributeUseCommand(action, cmdsUse);
+							
+						} else if (action.oclIsTypeOf(ActionSemantics!ReadVariableAction)) {
+						    self.getAttributeUseCommand(action, cmdsUse);
+						    
+						} else if (action.oclIsTypeOf(ActionSemantics!CreateLinkObjectAction)) {
+						    self.insertAssociationCommand(action, cmdsUse);
+						    
+						} else if(action.oclIsTypeOf(ActionSemantics!DestroyLinkAction)) {
+						    self.deleteAssociationCommand(action, cmdsUse);
+						    
+						} else if(action.oclIsTypeOf(ActionSemantics!CallOperationAction)) {
+						    self.openterCommand(action, cmdsUse);
+						    
+						} else if(action.oclIsTypeOf(ActionSemantics!ReplyAction)) {
+						    self.opexitCommand(action, cmdsUse);
+						}
+					}					
+				}
+			}
+		}
+	}
+	
+	-- Rule to create a Test Case to Use Tool
+	rule testCaseUse(testCaseAc : ActionSemantics!TestCaseAction, testCaseUse : UseCommands!TestCase) {
+			    
+		do {
+			testCaseUse.number <- testCaseAc.number;
+		}
+	}
+	
+	-- Rule to create a Create Object command to Use Tool
+	rule createObjectUseCommand(createObjAc : ActionSemantics!CreateObjectAction, cmdsUse : UseCommands!Commands) {
+		
+		to
+			createObjUse : UseCommands!CreateObjectCmd(name <- '!create',
+				obj <- createObjAc.result.name, type <- createObjAc.owner.name)
+		do {
+			cmdsUse.command <- cmdsUse.command->including(createObjUse);
+		}
+	}
+
+	-- Rule to create a Destroy Object command to Use Tool
+	rule destroyObjectUseCommand(destroyObjAc : ActionSemantics!DestroyObjectAction, cmdsUse : UseCommands!Commands) {
+		to
+			destroyObjUse : UseCommands!DestroyObjectCmd(name <- '!destroy',
+				obj <- destroyObjAc.target.name)
+		do {
+			cmdsUse.command <- cmdsUse.command->including(destroyObjUse);
+		}
+	}
+	
+	-- Rule to create a Set Attribute command to Use Tool	
+	rule setAttributeUseCommand(writeVarAc : ActionSemantics!WriteVariableAction, cmdsUse : UseCommands!Commands) {
+		to
+			writeVarUse : UseCommands!SetAttributeCmd(name <- '!set',
+				obj <- writeVarAc.owner.name, 
+				attributeName <- writeVarAc.owner.owner.name, 
+				value <- writeVarAc.value.name)
+		do {
+			cmdsUse.command <- cmdsUse.command->including(writeVarUse);
+		}
+	}
+	
+	-- Rule to create a Get Attribute command to Use Tool	
+	rule getAttributeUseCommand(readVarAc : ActionSemantics!ReadVariableAction, cmdsUse : UseCommands!Commands) {
+		to
+			readVarUse : UseCommands!GetAttributeCmd(name <- '?',
+				obj <- readVarAc.owner.name, 
+				attributeName <- readVarAc.owner.owner.name)
+		do {
+			cmdsUse.command <- cmdsUse.command->including(readVarUse);
+		}
+	}
+
+	-- Rule to create a Insert Association command to Use Tool
+	rule insertAssociationCommand(createLinkAc : ActionSemantics!CreateLinkObjectAction, cmdsUse : UseCommands!Commands) {
+		to
+			insertAssocUse : UseCommands!InsertAssociationCmd(name <- '!insert',
+				obj1 <- createLinkAc.inputValue->first().name, 
+				obj2 <- createLinkAc.inputValue->last().name, 
+				association <- createLinkAc.endData->first().owner.name)
+		do {
+			cmdsUse.command <- cmdsUse.command->including(insertAssocUse);
+		}
+	}
+	
+	-- Rule to create a Delete Association command to Use Tool
+	rule deleteAssociationCommand(destroyLinkAc : ActionSemantics!DestroyLinkAction, cmdsUse : UseCommands!Commands) {
+		to
+			deleteAssocUse : UseCommands!DeleteAssociationCmd(name <- '!delete',
+				obj1 <- destroyLinkAc.inputValue->first().name, 
+				obj2 <- destroyLinkAc.inputValue->last().name, 
+				association <- destroyLinkAc.endData->first().owner.name)
+		do {
+			cmdsUse.command <- cmdsUse.command->including(deleteAssocUse);
+		}
+	}
+
+	-- Rule to create a Openter command to Use Tool
+	rule openterCommand(callOperationAc : ActionSemantics!CallOperationAction, cmdsUse : UseCommands!Commands) {	    		
+		to
+			openterUse : UseCommands!OpenterCmd(name <- '!openter',
+				obj <- callOperationAc.target.name, 
+				methodName <- callOperationAc.owner.name, 
+				parameter <- callOperationAc.owner.owner.name)
+		do {
+			cmdsUse.command <- cmdsUse.command->including(openterUse);
+		}
+	}
+
+	-- Rule to create a Opexit command to Use Tool
+	rule opexitCommand(replyAc : ActionSemantics!ReplyAction, cmdsUse : UseCommands!Commands) {	    		
+		to
+			opexitUse : UseCommands!OpexitCmd(name <- '!opexit',
+				value <- replyAc.returnInformation.name)
+		do {
+			cmdsUse.command <- cmdsUse.command->including(opexitUse);
+		}
+	}

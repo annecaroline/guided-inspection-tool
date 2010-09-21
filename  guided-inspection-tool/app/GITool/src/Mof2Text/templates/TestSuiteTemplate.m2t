@@ -1,0 +1,13 @@
+texttransformation TestSuiteTemplate (in uc:"UseCommands") {
+    
+    /*
+	* This rule defines a template for a TestSuite.
+	*/
+	module::testSuiteTemplate(name:String, testCase:String){
+
+		// TODO code this template rule.
+		result += "// TODO define a template for: TestSuite"
+
+	} 
+  
+}
